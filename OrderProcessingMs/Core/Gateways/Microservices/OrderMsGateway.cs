@@ -1,5 +1,7 @@
-﻿using Core.Enums;
+﻿using Core.Entities;
+using Core.Enums;
 using Core.Interfaces.Gateways.Microservices;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.ComponentModel;
 using System.Net.Http.Headers;
@@ -15,6 +17,27 @@ namespace Core.Gateways.Microservices
         public OrderMsGateway(HttpClient http)
         {
             _http = http;
+        }
+
+        public async Task<IEnumerable<Pedido>> GetAll(StatusPedidoEnum? statusPedidoEnum, string token)
+        {
+            using var request = new HttpRequestMessage(
+               HttpMethod.Get,
+               $"Pedido/GetAll?status={(int)statusPedidoEnum}"
+            );
+
+            request.Headers.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+
+            using var response = await _http.SendAsync(request);
+
+            response.EnsureSuccessStatusCode();
+
+            var result = await response.Content.ReadAsStringAsync()
+                         ?? throw new InvalidOperationException("Invalid response from external service");
+
+            return JsonConvert.DeserializeObject<IEnumerable<Pedido>>(result)
+                   ?? throw new InvalidOperationException("Failed to deserialize Pedido object");
         }
 
         public async Task<int> IniciaPedido(string token)

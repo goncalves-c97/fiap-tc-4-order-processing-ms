@@ -10,4 +10,6 @@ public partial class ComboPedido
     public int IdPedido { get; set; }
 
     public virtual Combo IdComboNavigation { get; set; } = null!;
+
+    public virtual Pedido IdPedidoNavigation { get; set; } = null!;
 }

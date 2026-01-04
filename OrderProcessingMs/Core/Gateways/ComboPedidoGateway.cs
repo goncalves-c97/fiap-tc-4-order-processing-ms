@@ -2,6 +2,7 @@
 using Core.Enums;
 using Core.Interfaces;
 using Core.Interfaces.Gateways;
+using Core.Interfaces.Gateways.Microservices;
 
 namespace Core.Gateways
 {
@@ -24,48 +25,30 @@ namespace Core.Gateways
             });
         }
 
-        public async Task<IEnumerable<ComboPedido>> GetAllComboPedidosByStatusPedido(StatusPedidoEnum statusPedidoEnum)
+        public async Task<IEnumerable<ComboPedido>> GetAllComboPedidosByStatusPedido(IOrderMsGateway orderMsGateway, IPaymentMsGateway paymentMsGateway, ILoginMsGateway loginMsGateway, StatusPedidoEnum statusPedidoEnum, string token)
         {
-            // TODO: Pedido
-            //IEnumerable<Pedido> pedidos =  await _dbConnection.SearchByParametersAsync<Pedido>(
-            //    "Pedido", 
-            //    "id_status_pedido = @Status",
-            //    new { Status = (int)statusPedidoEnum }
-            //);
+            IEnumerable<Pedido> pedidos = await orderMsGateway.GetAll(statusPedidoEnum, token);
 
-            //IEnumerable<int> pedidoIds = pedidos
-            //    .Select(x => x.IdPedido)
-            //    .Distinct();
+            IEnumerable<int> pedidoIds = pedidos
+                .Select(x => x.IdPedido)
+                .Distinct();
 
             IEnumerable<ComboPedido> comboPedidos = await _dbConnection.SearchByParametersAsync<ComboPedido>(
                 _tableName,
                 "id_pedido IN @Pedidos",
-                null// new { Pedidos = pedidoIds }
+                new { Pedidos = pedidoIds }
             );
 
             foreach (ComboPedido comboPedido in comboPedidos)
             {
-                //comboPedido.IdPedidoNavigation = (await _dbConnection.SearchFirstOrDefaultByParametersAsync<Pedido>(
-                //    "Pedido",
-                //    "id_pedido = @Id",
-                //    new { Id = comboPedido.IdPedido }
-                //))!;
+                comboPedido.IdPedidoNavigation = pedidos.FirstOrDefault(p => p.IdPedido == comboPedido.IdPedido);
 
-                //if (comboPedido.IdPedidoNavigation != null)
-                //{
-                //    // TODO: Checar necessidade desses recursos
-                //    //comboPedido.IdPedidoNavigation.IdPagamentoNavigation = (await _dbConnection.SearchFirstOrDefaultByParametersAsync<Pagamento>(
-                //    //    "Pagamento",
-                //    //    "id_pagamento = @Id",
-                //    //    new { Id = comboPedido.IdPedidoNavigation.IdPagamento }
-                //    //))!;
+                if (comboPedido.IdPedidoNavigation != null)
+                {
+                    comboPedido.IdPedidoNavigation.IdPagamentoNavigation = await paymentMsGateway.GetPagamentoByIdPedido(comboPedido.IdPedido, token);
 
-                //    //comboPedido.IdPedidoNavigation.IdClienteNavigation = (await _dbConnection.SearchFirstOrDefaultByParametersAsync<Cliente>(
-                //    //    "Cliente",
-                //    //    "id_cliente = @Id",
-                //    //    new { Id = comboPedido.IdPedidoNavigation.IdCliente }
-                //    //))!;
-                //}
+                    comboPedido.IdPedidoNavigation.IdClienteNavigation = await loginMsGateway.GetClienteById(comboPedido.IdPedidoNavigation.IdCliente, token);
+                }
 
                 comboPedido.IdComboNavigation = (await _dbConnection.SearchFirstOrDefaultByParametersAsync<Combo>(
                     "Combo",

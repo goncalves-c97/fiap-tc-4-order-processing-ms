@@ -1,7 +1,9 @@
 ﻿using Core.Entities;
 using Core.Enums;
 using Core.Gateways;
+using Core.Gateways.Microservices;
 using Core.Interfaces.Gateways;
+using Core.Interfaces.Gateways.Microservices;
 
 namespace Core.UseCases
 {
@@ -18,9 +20,9 @@ namespace Core.UseCases
             await comboPedidoGateway.AddComboOnPedido(idCombo, idPedido);
         }
 
-        public static async Task<IEnumerable<ComboPedido>> GetAllComboPedidosByStatusPedido(IComboPedidoGateway comboPedidoGateway, StatusPedidoEnum statusPedidoEnum)
+        public static async Task<IEnumerable<ComboPedido>> GetAllComboPedidosByStatusPedido(IComboPedidoGateway comboPedidoGateway, StatusPedidoEnum statusPedidoEnum, IOrderMsGateway orderMsGateway, IPaymentMsGateway paymentMsGateway, ILoginMsGateway loginMsGateway, string token)
         {
-            return await comboPedidoGateway.GetAllComboPedidosByStatusPedido(statusPedidoEnum);
+            return await comboPedidoGateway.GetAllComboPedidosByStatusPedido(orderMsGateway, paymentMsGateway, loginMsGateway, statusPedidoEnum, token);
         }
     }
 }

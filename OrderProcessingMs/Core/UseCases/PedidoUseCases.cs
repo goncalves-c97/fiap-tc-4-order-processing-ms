@@ -2,6 +2,7 @@
 using Core.Entities;
 using Core.Enums;
 using Core.Gateways;
+using Core.Gateways.Microservices;
 using Core.Interfaces.Gateways;
 using Core.Interfaces.Gateways.Microservices;
 using Core.UseCases.Microservices;
@@ -84,7 +85,7 @@ namespace Core.UseCases
             await OrderMsUseCases.UpdateStatusPedido(orderMsGateway, idPedido, StatusPedidoEnum.Finalizado, token);
         }
 
-        public static async Task<Dictionary<string, List<object>>> GetPedidosTelaoPedidos(IPedidoGateway pedidoGateway, IComboPedidoGateway comboPedidoGateway)
+        public static async Task<Dictionary<string, List<object>>> GetPedidosTelaoPedidos(IPedidoGateway pedidoGateway, IComboPedidoGateway comboPedidoGateway, IOrderMsGateway orderMsGateway, IPaymentMsGateway paymentMsGateway, ILoginMsGateway loginMsGateway, string token)
         {
             List<ComboPedido> comboPedidos = [];
 
@@ -96,27 +97,22 @@ namespace Core.UseCases
                 { StatusPedidoEnum.Finalizado.ToString(), new List<object>() },
             };
 
-            comboPedidos.AddRange(await comboPedidoGateway.GetAllComboPedidosByStatusPedido(StatusPedidoEnum.Recebido));
-            comboPedidos.AddRange(await comboPedidoGateway.GetAllComboPedidosByStatusPedido(StatusPedidoEnum.EmPreparacao));
-            comboPedidos.AddRange(await comboPedidoGateway.GetAllComboPedidosByStatusPedido(StatusPedidoEnum.Pronto));
-            comboPedidos.AddRange(await comboPedidoGateway.GetAllComboPedidosByStatusPedido(StatusPedidoEnum.Finalizado));
+            comboPedidos.AddRange(await comboPedidoGateway.GetAllComboPedidosByStatusPedido(orderMsGateway, paymentMsGateway, loginMsGateway, StatusPedidoEnum.Recebido, token));
+            comboPedidos.AddRange(await comboPedidoGateway.GetAllComboPedidosByStatusPedido(orderMsGateway, paymentMsGateway, loginMsGateway, StatusPedidoEnum.EmPreparacao, token));
+            comboPedidos.AddRange(await comboPedidoGateway.GetAllComboPedidosByStatusPedido(orderMsGateway, paymentMsGateway, loginMsGateway, StatusPedidoEnum.Pronto, token));
+            comboPedidos.AddRange(await comboPedidoGateway.GetAllComboPedidosByStatusPedido(orderMsGateway, paymentMsGateway, loginMsGateway, StatusPedidoEnum.Finalizado, token));
 
             foreach (ComboPedido comboPedido in comboPedidos)
             {
-                string dictKey = "0"; // TODO: ((StatusPedidoEnum)comboPedido.IdPedidoNavigation.IdStatusPedido!).ToString();
-
-                // TODO: Definir o que será exibido como identificador do pedido na telao
-                string identificador = comboPedido.IdPedido.ToString();
-
-                // string identificador = comboPedido.IdPedidoNavigation.IdClienteNavigation.Nome ?? comboPedido.IdPedido.ToString();
-
+                string dictKey = ((StatusPedidoEnum)comboPedido.IdPedidoNavigation.IdStatusPedido!).ToString();
+                string identificador = comboPedido.IdPedidoNavigation.IdClienteNavigation.Nome ?? comboPedido.IdPedido.ToString();
                 itens[dictKey].Add(new { identificador });
             }
 
             return itens;
         }
 
-        public static async Task<Dictionary<string, List<object>>> GetPedidosPainelCozinha(IPedidoGateway pedidoGateway, IComboPedidoGateway comboPedidoGateway)
+        public static async Task<Dictionary<string, List<object>>> GetPedidosPainelCozinha(IOrderMsGateway orderMsGateway, IPaymentMsGateway paymentMsGateway, ILoginMsGateway loginMsGateway, IPedidoGateway pedidoGateway, IComboPedidoGateway comboPedidoGateway, string token)
         {
             List<ComboPedido> comboPedidos = [];
 
@@ -126,12 +122,12 @@ namespace Core.UseCases
                 { StatusPedidoEnum.EmPreparacao.ToString(), new List<object>() },
             };
 
-            comboPedidos.AddRange(await comboPedidoGateway.GetAllComboPedidosByStatusPedido(StatusPedidoEnum.Recebido));
-            comboPedidos.AddRange(await comboPedidoGateway.GetAllComboPedidosByStatusPedido(StatusPedidoEnum.EmPreparacao));
+            comboPedidos.AddRange(await comboPedidoGateway.GetAllComboPedidosByStatusPedido(orderMsGateway, paymentMsGateway, loginMsGateway, StatusPedidoEnum.Recebido, token));
+            comboPedidos.AddRange(await comboPedidoGateway.GetAllComboPedidosByStatusPedido(orderMsGateway, paymentMsGateway, loginMsGateway, StatusPedidoEnum.EmPreparacao, token));
 
             foreach (ComboPedido comboPedido in comboPedidos)
             {
-                string dictKey = "0"; // TODO: ((StatusPedidoEnum)comboPedido.IdPedidoNavigation.IdStatusPedido!).ToString();
+                string dictKey = ((StatusPedidoEnum)comboPedido.IdPedidoNavigation.IdStatusPedido!).ToString();
 
                 string lanche = comboPedido.IdComboNavigation.IdLancheNavigation != null ? comboPedido.IdComboNavigation.IdLancheNavigation.Nome : "n/a";
                 string acompanhamento = comboPedido.IdComboNavigation.IdAcompanhamentoNavigation != null ? comboPedido.IdComboNavigation.IdAcompanhamentoNavigation.Nome : "n/a";
@@ -162,7 +158,7 @@ namespace Core.UseCases
             return itens;
         }
 
-        public static async Task<Dictionary<string, List<object>>> GetPedidosPainelAtendente(IPedidoGateway pedidoGateway, IComboPedidoGateway comboPedidoGateway)
+        public static async Task<Dictionary<string, List<object>>> GetPedidosPainelAtendente(IPedidoGateway pedidoGateway, IComboPedidoGateway comboPedidoGateway, IOrderMsGateway orderMsGateway, IPaymentMsGateway paymentMsGateway, ILoginMsGateway loginMsGateway, string token)
         {
             List<ComboPedido> comboPedidos = [];
 
@@ -172,12 +168,12 @@ namespace Core.UseCases
                 { StatusPedidoEnum.Pronto.ToString(), new List<object>() },
             };
 
-            comboPedidos.AddRange(await comboPedidoGateway.GetAllComboPedidosByStatusPedido(StatusPedidoEnum.EmPreparacao));
-            comboPedidos.AddRange(await comboPedidoGateway.GetAllComboPedidosByStatusPedido(StatusPedidoEnum.Pronto));
+            comboPedidos.AddRange(await comboPedidoGateway.GetAllComboPedidosByStatusPedido(orderMsGateway, paymentMsGateway, loginMsGateway, StatusPedidoEnum.EmPreparacao, token));
+            comboPedidos.AddRange(await comboPedidoGateway.GetAllComboPedidosByStatusPedido(orderMsGateway, paymentMsGateway, loginMsGateway, StatusPedidoEnum.Pronto, token));
 
             foreach (ComboPedido comboPedido in comboPedidos)
             {
-                string dictKey = "0"; // TODO:  ((StatusPedidoEnum)comboPedido.IdPedidoNavigation.IdStatusPedido!).ToString();
+                string dictKey = ((StatusPedidoEnum)comboPedido.IdPedidoNavigation.IdStatusPedido!).ToString();
 
                 string lanche = comboPedido.IdComboNavigation.IdLancheNavigation != null ? comboPedido.IdComboNavigation.IdLancheNavigation.Nome : "n/a";
                 string acompanhamento = comboPedido.IdComboNavigation.IdAcompanhamentoNavigation != null ? comboPedido.IdComboNavigation.IdAcompanhamentoNavigation.Nome : "n/a";
@@ -208,7 +204,7 @@ namespace Core.UseCases
             return itens;
         }
 
-        public static async Task<Dictionary<string, List<object>>> GetPedidosPainelAdministrador(IPedidoGateway pedidoGateway, IComboPedidoGateway comboPedidoGateway)
+        public static async Task<Dictionary<string, List<object>>> GetPedidosPainelAdministrador(IPedidoGateway pedidoGateway, IComboPedidoGateway comboPedidoGateway, IOrderMsGateway orderMsGateway, IPaymentMsGateway paymentMsGateway, ILoginMsGateway loginMsGateway, string token)
         {
             List<ComboPedido> comboPedidos = [];
 
@@ -220,14 +216,14 @@ namespace Core.UseCases
                 { StatusPedidoEnum.Finalizado.ToString(), new List<object>() },
             };
 
-            comboPedidos.AddRange(await comboPedidoGateway.GetAllComboPedidosByStatusPedido(StatusPedidoEnum.Recebido));
-            comboPedidos.AddRange(await comboPedidoGateway.GetAllComboPedidosByStatusPedido(StatusPedidoEnum.EmPreparacao));
-            comboPedidos.AddRange(await comboPedidoGateway.GetAllComboPedidosByStatusPedido(StatusPedidoEnum.Pronto));
-            comboPedidos.AddRange(await comboPedidoGateway.GetAllComboPedidosByStatusPedido(StatusPedidoEnum.Finalizado));
+            comboPedidos.AddRange(await comboPedidoGateway.GetAllComboPedidosByStatusPedido(orderMsGateway, paymentMsGateway, loginMsGateway, StatusPedidoEnum.Recebido, token));
+            comboPedidos.AddRange(await comboPedidoGateway.GetAllComboPedidosByStatusPedido(orderMsGateway, paymentMsGateway, loginMsGateway, StatusPedidoEnum.EmPreparacao, token));
+            comboPedidos.AddRange(await comboPedidoGateway.GetAllComboPedidosByStatusPedido(orderMsGateway, paymentMsGateway, loginMsGateway, StatusPedidoEnum.Pronto, token));
+            comboPedidos.AddRange(await comboPedidoGateway.GetAllComboPedidosByStatusPedido(orderMsGateway, paymentMsGateway, loginMsGateway, StatusPedidoEnum.Finalizado,token));
 
             foreach (ComboPedido comboPedido in comboPedidos)
             {
-                string dictKey = "0"; // TODO: ((StatusPedidoEnum)comboPedido.IdPedidoNavigation.IdStatusPedido!).ToString();
+                string dictKey = ((StatusPedidoEnum)comboPedido.IdPedidoNavigation.IdStatusPedido!).ToString();
 
                 string lanche = comboPedido.IdComboNavigation.IdLancheNavigation != null ? comboPedido.IdComboNavigation.IdLancheNavigation.Nome : "n/a";
                 string acompanhamento = comboPedido.IdComboNavigation.IdAcompanhamentoNavigation != null ? comboPedido.IdComboNavigation.IdAcompanhamentoNavigation.Nome : "n/a";

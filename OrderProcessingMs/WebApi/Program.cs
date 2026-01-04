@@ -6,12 +6,9 @@ using Core.Interfaces.Gateways.Microservices;
 using Core.Settings;
 using Dapper;
 using Infra.Data.SqlServer;
-using Infra.Email;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -149,6 +146,17 @@ builder.Services.Configure<EmailSettingsDto>(builder.Configuration.GetSection("E
 
 #region Configuração dos microsserviços
 
+builder.Services.AddHttpClient<ILoginMsGateway, LoginMsGateway>(client =>
+{
+    string? loginMicroserviceUrl = builder.Configuration["LOGIN_MS_URL"];
+
+    if (string.IsNullOrEmpty(loginMicroserviceUrl))
+        throw new Exception("LOGIN_MS_URL não encontrada!");
+
+    client.BaseAddress = new Uri(loginMicroserviceUrl);
+    client.Timeout = TimeSpan.FromSeconds(60);
+});
+
 builder.Services.AddHttpClient<IOrderMsGateway, OrderMsGateway>(client =>
 {
     string? orderMicroserviceUrl = builder.Configuration["ORDER_MS_URL"];
@@ -157,7 +165,7 @@ builder.Services.AddHttpClient<IOrderMsGateway, OrderMsGateway>(client =>
         throw new Exception("ORDER_MS_URL não encontrada!"); 
 
     client.BaseAddress = new Uri(orderMicroserviceUrl);
-    client.Timeout = TimeSpan.FromSeconds(10);
+    client.Timeout = TimeSpan.FromSeconds(60);
 });
 
 builder.Services.AddHttpClient<IPaymentMsGateway, PaymentMsGateway>(client =>
@@ -172,12 +180,6 @@ builder.Services.AddHttpClient<IPaymentMsGateway, PaymentMsGateway>(client =>
 });
 
 #endregion
-
-builder.Services.AddScoped<IEmailService>(provider => {
-    var settings = provider.GetRequiredService<IOptions<EmailSettingsDto>>().Value;
-    Console.WriteLine(JsonConvert.SerializeObject(settings, Formatting.Indented));
-    return new EmailService(settings);
-});
 
 var app = builder.Build();
 

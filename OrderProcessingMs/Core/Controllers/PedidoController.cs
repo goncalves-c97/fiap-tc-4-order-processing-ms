@@ -37,12 +37,9 @@ namespace Core.Controllers
             await PedidoUseCases.UpdatePedidoStatusToEmPreparacao(orderMsGateway, idPedido, token);
         }
 
-        public static async Task InformaPedidoPronto(IOrderMsGateway orderMsGateway, IEmailService emailService, int idPedido, string token)
+        public static async Task InformaPedidoPronto(IOrderMsGateway orderMsGateway, int idPedido, string token)
         {
-
             await PedidoUseCases.UpdatePedidoStatusToPronto(orderMsGateway, idPedido, token);
-
-            await EmailUseCases.SendNotificacaoPedidoPronto(emailService, idPedido, token);
         }
 
         public static async Task InformaPedidoFinalizado(IOrderMsGateway orderMsGateway, int idPedido, string token)
@@ -50,36 +47,36 @@ namespace Core.Controllers
             await PedidoUseCases.UpdatePedidoStatusToFinalizado(orderMsGateway, idPedido, token);
         }
 
-        public static async Task<Dictionary<string, List<object>>> GetPedidosTelaoPedidos(IDbConnection dbConnection)
+        public static async Task<Dictionary<string, List<object>>> GetPedidosTelaoPedidos(IDbConnection dbConnection, IOrderMsGateway orderMsGateway, IPaymentMsGateway paymentMsGateway, ILoginMsGateway loginMsGateway, string token)
         {
             PedidoGateway pedidoGateway = new(dbConnection);
             ComboPedidoGateway comboPedidoGateway = new(dbConnection);
 
-            return await PedidoUseCases.GetPedidosTelaoPedidos(pedidoGateway, comboPedidoGateway);
+            return await PedidoUseCases.GetPedidosTelaoPedidos(pedidoGateway, comboPedidoGateway, orderMsGateway, paymentMsGateway, loginMsGateway, token);
         }
 
-        public static async Task<Dictionary<string, List<object>>> GetPedidosPainelCozinha(IDbConnection dbConnection)
+        public static async Task<Dictionary<string, List<object>>> GetPedidosPainelCozinha(IDbConnection dbConnection, IOrderMsGateway orderMsGateway, IPaymentMsGateway paymentMsGateway, ILoginMsGateway loginMsGateway, string token)
         {
             PedidoGateway pedidoGateway = new(dbConnection);
             ComboPedidoGateway comboPedidoGateway = new(dbConnection);
 
-            return await PedidoUseCases.GetPedidosPainelCozinha(pedidoGateway, comboPedidoGateway);
+            return await PedidoUseCases.GetPedidosPainelCozinha(orderMsGateway, paymentMsGateway, loginMsGateway, pedidoGateway, comboPedidoGateway, token);
         }
 
-        public static async Task<Dictionary<string, List<object>>> GetPedidosPainelAtendente(IDbConnection dbConnection)
+        public static async Task<Dictionary<string, List<object>>> GetPedidosPainelAtendente(IDbConnection dbConnection, IOrderMsGateway orderMsGateway, IPaymentMsGateway paymentMsGateway, ILoginMsGateway loginMsGateway, string token)
         {
             PedidoGateway pedidoGateway = new(dbConnection);
             ComboPedidoGateway comboPedidoGateway = new(dbConnection);
 
-            return await PedidoUseCases.GetPedidosPainelAtendente(pedidoGateway, comboPedidoGateway);
+            return await PedidoUseCases.GetPedidosPainelAtendente(pedidoGateway, comboPedidoGateway, orderMsGateway, paymentMsGateway, loginMsGateway, token);
         }
 
-        public static async Task<Dictionary<string, List<object>>> GetPedidosPainelAdministrador(IDbConnection dbConnection)
+        public static async Task<Dictionary<string, List<object>>> GetPedidosPainelAdministrador(IDbConnection dbConnection, IOrderMsGateway orderMsGateway, IPaymentMsGateway paymentMsGateway, ILoginMsGateway loginMsGateway, string token)
         {
             PedidoGateway pedidoGateway = new(dbConnection);
             ComboPedidoGateway comboPedidoGateway = new(dbConnection);
 
-            return await PedidoUseCases.GetPedidosPainelAdministrador(pedidoGateway, comboPedidoGateway);
+            return await PedidoUseCases.GetPedidosPainelAdministrador(pedidoGateway, comboPedidoGateway, orderMsGateway, paymentMsGateway, loginMsGateway, token);
         }
 
         //public static async Task<StatusPagamentoEnum> CheckStatusPagamentoPedido(IDbConnection dbConnection, int idPedido)

@@ -15,8 +15,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infra.Data.SqlServer", "Infra.Data.SqlServer\Infra.Data.SqlServer.csproj", "{47549124-945E-4B6B-ADA1-A682453B19D0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infra.Email", "Infra.Email\Infra.Email.csproj", "{FA4B4228-2826-4CAE-8A2E-9871DEABE578}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "k8s", "k8s", "{32E5F248-C6EA-4EEF-BC06-CB6CECA227CA}"
 	ProjectSection(SolutionItems) = preProject
 		k8s\configmap.yaml = k8s\configmap.yaml
@@ -46,10 +44,6 @@ Global
 		{47549124-945E-4B6B-ADA1-A682453B19D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{47549124-945E-4B6B-ADA1-A682453B19D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{47549124-945E-4B6B-ADA1-A682453B19D0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FA4B4228-2826-4CAE-8A2E-9871DEABE578}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FA4B4228-2826-4CAE-8A2E-9871DEABE578}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FA4B4228-2826-4CAE-8A2E-9871DEABE578}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FA4B4228-2826-4CAE-8A2E-9871DEABE578}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

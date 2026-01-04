@@ -1,11 +1,8 @@
 ﻿using Core.Constants;
 using Core.Controllers;
 using Core.Dtos;
-using Core.Entities;
-using Core.Enums;
 using Core.Interfaces;
 using Core.Interfaces.Gateways.Microservices;
-using Infra.Email;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -14,10 +11,9 @@ namespace WebApi.Endpoints
 {
     [ApiController]
     [Route("Pedido")]
-    public class PedidoEndpoint(IDbConnection dbConnection, IEmailService emailService, IOrderMsGateway orderMsGateway, IPaymentMsGateway paymentMsGateway) : ControllerBase
+    public class PedidoEndpoint(IDbConnection dbConnection, IOrderMsGateway orderMsGateway, IPaymentMsGateway paymentMsGateway) : ControllerBase
     {
         private readonly IDbConnection _dbConnection = dbConnection;
-        private readonly IEmailService _emailService = emailService;
         private readonly IOrderMsGateway _orderMsGateway = orderMsGateway;
         private readonly IPaymentMsGateway _paymentMsGateway = paymentMsGateway;
 
@@ -58,7 +54,7 @@ namespace WebApi.Endpoints
         [HttpPut, Route("FinalizaPreparo")]
         public async Task<IActionResult> FinalizaPreparo([FromQuery] int idPedido)
         {
-            await PedidoController.InformaPedidoPronto(_orderMsGateway, _emailService, idPedido, GetRequestToken(this));
+            await PedidoController.InformaPedidoPronto(_orderMsGateway, idPedido, GetRequestToken(this));
             return Ok();
         }
 

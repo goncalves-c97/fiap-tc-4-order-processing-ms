@@ -113,7 +113,7 @@ namespace Core.UseCases
 
             EmailRequestDto emailRequestDto = new()
             {
-                ToEmail = "TODO: Corrigir",// pedido.IdClienteNavigation.Email!,
+                ToEmail = email,
                 Subject = $"Seu pedido (#{idPedido}) está pronto!",
                 Body = emailMessage
             };
