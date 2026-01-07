@@ -21,9 +21,7 @@
         "DB_NAME": "OrderProcessingDb",
         "LOGIN_MS_URL": "https://localhost:8080",
         "ORDER_MS_URL": "https://localhost:8082",
-        "PAYMENT_MS_URL": "https://localhost:8083",
-        "APP_SETTINGS__APP_URL": "https://localhost:7157",
-        "APP_SETTINGS__ORDER_MS_URL": "https://localhost:7160"
+        "PAYMENT_MS_URL": "https://localhost:8083"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:8081"
