@@ -28,6 +28,17 @@ namespace Core.Gateways.Microservices
 
             using var response = await _http.SendAsync(request);
 
+            string content = await response.Content.ReadAsStringAsync();
+
+            try
+            {
+                response.EnsureSuccessStatusCode();
+            }
+            catch (HttpRequestException)
+            {
+                throw new Exception($"Falha ao realizar checkout do pedido. Detalhes: {content}");
+            }
+
             response.EnsureSuccessStatusCode();
 
             var result = await response.Content.ReadFromJsonAsync<QrCodePagamentoDto>()
@@ -38,7 +49,7 @@ namespace Core.Gateways.Microservices
 
         public async Task<Pagamento> GetPagamentoByIdPedido(int idPedido, string token)
         {
-            
+
             using var request = new HttpRequestMessage(
                 HttpMethod.Get,
                 $"Pedido/GetById?idPedido={idPedido}"

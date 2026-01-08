@@ -1,5 +1,5 @@
 # Exporta o endpoint do banco de dados após a criação
-output "db_endpoint" {
+output "db_order_processing_ms_endpoint" {
   description = "O endpoint da instância do banco de dados RDS."
   value       = aws_db_instance.sqlserver_order_processing_ms.address
 }

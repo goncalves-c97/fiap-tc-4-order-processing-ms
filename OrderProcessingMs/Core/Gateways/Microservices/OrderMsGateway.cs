@@ -51,7 +51,17 @@ namespace Core.Gateways.Microservices
                 new AuthenticationHeaderValue("Bearer", token);
 
             using var response = await _http.SendAsync(request);
-            response.EnsureSuccessStatusCode();
+
+            string content = await response.Content.ReadAsStringAsync();
+
+            try
+            {
+                response.EnsureSuccessStatusCode();
+            }
+            catch (HttpRequestException)
+            {
+                throw new Exception($"Falha ao iniciar pedido. Detalhes: {content}");
+            }
 
             var result = await response.Content.ReadAsStringAsync()
                          ?? throw new InvalidOperationException("Invalid response from external service");

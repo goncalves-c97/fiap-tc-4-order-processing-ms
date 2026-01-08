@@ -29,6 +29,10 @@ namespace Infra.Data.SqlServer
 
                 if (!dbExists)
                 {
+                    using var createCmd = connection.CreateCommand();
+                    createCmd.CommandText = "CREATE DATABASE OrderProcessingDb;";
+                    createCmd.ExecuteNonQuery();
+
                     string assemblyDir = Path.GetDirectoryName(typeof(DatabaseInitializer).Assembly.Location)!;
                     string scriptPath = Path.Combine(assemblyDir, "schema.sql");
                     string script = File.ReadAllText(scriptPath);
