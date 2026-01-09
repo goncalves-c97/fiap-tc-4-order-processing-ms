@@ -15,7 +15,7 @@ namespace Core.UseCases
         {
             ArgumentNullException.ThrowIfNull(ingredientesLancheGateway);
 
-            if(lancheId <= 0)
+            if (lancheId <= 0)
                 throw new ArgumentException("ID do lanche deve ser maior que zero.", nameof(lancheId));
 
             return ingredientesLancheGateway.GetAllByLancheId(lancheId);

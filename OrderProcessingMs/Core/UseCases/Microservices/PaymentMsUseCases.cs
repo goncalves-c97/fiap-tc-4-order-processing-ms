@@ -22,7 +22,7 @@ namespace Core.UseCases.Microservices
             int valorTotalPedidoCentavos = (int)itens
                     .Select(x => x.ValorTotal)
                     .Sum()
-                    *100; // Converte p/ centavos, para trabalhar com inteiros
+                    * 100; // Converte p/ centavos, para trabalhar com inteiros
 
             return await paymentMsGateway.CheckoutPedido(idPedido, valorTotalPedidoCentavos, token);
         }

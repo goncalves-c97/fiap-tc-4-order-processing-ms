@@ -1,6 +1,6 @@
 ﻿namespace Core.Dtos
 {
-    public class CadastroIngredienteLancheDto 
+    public class CadastroIngredienteLancheDto
     {
         public int IdLanche { get; set; }
         public int IdIngrediente { get; set; }

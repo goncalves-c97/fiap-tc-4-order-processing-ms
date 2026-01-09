@@ -41,7 +41,7 @@ namespace Core.UseCases
             if (idAcompanhamento <= 0)
                 throw new ArgumentException("ID do acompanhamento deve ser maior que zero.", nameof(idAcompanhamento));
 
-            Acompanhamento? acompanhamento = await acompanhamentoGateway.GetById(idAcompanhamento) 
+            Acompanhamento? acompanhamento = await acompanhamentoGateway.GetById(idAcompanhamento)
                 ?? throw new KeyNotFoundException($"Acompanhamento com ID {idAcompanhamento} não encontrado.");
 
             acompanhamento.Nome = nomePrecoDto.Nome;

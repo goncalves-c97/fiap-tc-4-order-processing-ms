@@ -30,7 +30,7 @@ namespace Core.UseCases
             => gateway.GetById(id);
 
         public static async Task<Lanche> InsertLanche(ILancheGateway lancheGateway, IIngredientesLancheGateway ingredientesLancheGateway, IIngredienteGateway ingredienteGateway, CadastroLancheDto dto)
-        { 
+        {
             NomePrecoDto nomePrecoDto = new()
             {
                 Nome = dto.Nome,
@@ -45,8 +45,8 @@ namespace Core.UseCases
                     ingrediente.IdIngrediente,
                     ingrediente.Quantidade))
                 .ToList();
-               
-            lanche.IngredientesLanche = [..await IngredientesLancheUseCases.Insert(ingredientesLancheGateway, cadastroIngredienteLancheDtos)];
+
+            lanche.IngredientesLanche = [.. await IngredientesLancheUseCases.Insert(ingredientesLancheGateway, cadastroIngredienteLancheDtos)];
 
             foreach (IngredientesLanche ingredienteLanche in lanche.IngredientesLanche)
             {

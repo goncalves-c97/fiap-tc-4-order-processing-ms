@@ -16,7 +16,7 @@ namespace Core.UseCases
             if (idCombo <= 0)
                 throw new ArgumentException($"'{nameof(idCombo)}' deve ser maior que zero");
 
-            return await comboGateway.GetCompleteComboById(idCombo) 
+            return await comboGateway.GetCompleteComboById(idCombo)
                 ?? throw new KeyNotFoundException($"Combo with ID {idCombo} not found.");
         }
     }

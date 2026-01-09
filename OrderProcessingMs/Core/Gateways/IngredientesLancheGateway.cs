@@ -23,8 +23,8 @@ namespace Core.Gateways
 
         public async Task DeleteByLancheIdAndIngredienteId(int idLanche, int idIngrediente)
         {
-            await _dbConnection.DeleteAsync(TableName, 
-                "id_lanche = @IdLanche AND id_ingrediente = @IdIngrediente", 
+            await _dbConnection.DeleteAsync(TableName,
+                "id_lanche = @IdLanche AND id_ingrediente = @IdIngrediente",
                 new { IdLanche = idLanche, IdIngrediente = idIngrediente });
         }
 
@@ -37,7 +37,7 @@ namespace Core.Gateways
         {
             List<IngredientesLanche> ingredientesLanches = [];
 
-            foreach(CadastroIngredienteLancheDto ingredienteLanche in ingredientesLanche)
+            foreach (CadastroIngredienteLancheDto ingredienteLanche in ingredientesLanche)
             {
                 await _dbConnection.InsertAsync(TableName, new Dictionary<string, object>
                 {

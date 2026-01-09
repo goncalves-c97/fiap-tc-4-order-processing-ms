@@ -56,7 +56,7 @@ namespace Core.UseCases
             await DeleteAlteracoesIngredienteOnCombo(alteracaoIngredienteComboGateway, idCombo);
 
             // Adiciona as novas alterações de ingrediente ao banco, caso haja
-            foreach(IngredienteLancheDto ingrediente in ingredienteLancheDtos)
+            foreach (IngredienteLancheDto ingrediente in ingredienteLancheDtos)
             {
                 await AddAlteracaoIngredienteOnCombo(alteracaoIngredienteComboGateway, idCombo, ingrediente);
             }

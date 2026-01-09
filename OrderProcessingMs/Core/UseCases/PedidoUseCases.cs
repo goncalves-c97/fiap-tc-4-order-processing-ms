@@ -219,7 +219,7 @@ namespace Core.UseCases
             comboPedidos.AddRange(await comboPedidoGateway.GetAllComboPedidosByStatusPedido(orderMsGateway, paymentMsGateway, loginMsGateway, StatusPedidoEnum.Recebido, token));
             comboPedidos.AddRange(await comboPedidoGateway.GetAllComboPedidosByStatusPedido(orderMsGateway, paymentMsGateway, loginMsGateway, StatusPedidoEnum.EmPreparacao, token));
             comboPedidos.AddRange(await comboPedidoGateway.GetAllComboPedidosByStatusPedido(orderMsGateway, paymentMsGateway, loginMsGateway, StatusPedidoEnum.Pronto, token));
-            comboPedidos.AddRange(await comboPedidoGateway.GetAllComboPedidosByStatusPedido(orderMsGateway, paymentMsGateway, loginMsGateway, StatusPedidoEnum.Finalizado,token));
+            comboPedidos.AddRange(await comboPedidoGateway.GetAllComboPedidosByStatusPedido(orderMsGateway, paymentMsGateway, loginMsGateway, StatusPedidoEnum.Finalizado, token));
 
             foreach (ComboPedido comboPedido in comboPedidos)
             {

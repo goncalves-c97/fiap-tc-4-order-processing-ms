@@ -65,8 +65,8 @@ namespace Core.Gateways.Microservices
 
             var result = await response.Content.ReadAsStringAsync()
                          ?? throw new InvalidOperationException("Invalid response from external service");
-            
-            if(int.TryParse(result, out int idPedido))
+
+            if (int.TryParse(result, out int idPedido))
                 return idPedido;
             else
                 throw new Exception("Falha ao obter ID do pedido criado");

@@ -42,7 +42,7 @@ namespace Core.Gateways
 
         public async Task Update(Acompanhamento acompanhamento)
         {
-            await _dbConnection.UpdateAsync(TableName, 
+            await _dbConnection.UpdateAsync(TableName,
                 new Dictionary<string, object>
                 {
                     { "nome", acompanhamento.Nome },

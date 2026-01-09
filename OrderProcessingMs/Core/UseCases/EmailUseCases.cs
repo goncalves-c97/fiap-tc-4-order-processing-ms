@@ -55,7 +55,7 @@ namespace Core.UseCases
             string? email = GetClaimValue(token, ClaimTypes.Email);
 
             // Em situações de cliente anônimo, não há notificação por email
-            if(string.IsNullOrEmpty(email))
+            if (string.IsNullOrEmpty(email))
                 return;
 
             string emailMessage = $@"

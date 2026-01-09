@@ -162,7 +162,7 @@ builder.Services.AddHttpClient<IOrderMsGateway, OrderMsGateway>(client =>
     string? orderMicroserviceUrl = builder.Configuration["ORDER_MS_URL"];
 
     if (string.IsNullOrEmpty(orderMicroserviceUrl))
-        throw new Exception("ORDER_MS_URL não encontrada!"); 
+        throw new Exception("ORDER_MS_URL não encontrada!");
 
     client.BaseAddress = new Uri(orderMicroserviceUrl);
     client.Timeout = TimeSpan.FromSeconds(60);
@@ -197,3 +197,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program { }

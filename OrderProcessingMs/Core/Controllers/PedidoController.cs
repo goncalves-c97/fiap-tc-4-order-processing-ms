@@ -33,7 +33,7 @@ namespace Core.Controllers
 
         public static async Task InformaPedidoEmPreparo(IOrderMsGateway orderMsGateway, int idPedido, string token)
         {
-            
+
             await PedidoUseCases.UpdatePedidoStatusToEmPreparacao(orderMsGateway, idPedido, token);
         }
 
@@ -43,7 +43,7 @@ namespace Core.Controllers
         }
 
         public static async Task InformaPedidoFinalizado(IOrderMsGateway orderMsGateway, int idPedido, string token)
-        { 
+        {
             await PedidoUseCases.UpdatePedidoStatusToFinalizado(orderMsGateway, idPedido, token);
         }
 
